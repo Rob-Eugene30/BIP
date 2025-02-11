@@ -1,34 +1,29 @@
-{%extends "base.html"%} 
-<!--This code means that it uses everything in the base.html file and adds the following code to it (mainly in {})-->
-
-{% block title %}Log In{% endblock %}
-
-{% block content %}
-  
-<form method = "POST">
-    <h3 align="center"> Log In </h3>
-    <div class="form-group">
-        <label for="email"> Email Address </label>
-        <input type="email" 
-        class="form-control" 
-        id="email" 
-        name="email" 
-        placeholder="Enter your Email Here!"/>
-
-    </div>
-
-    <div class="form-group">
-        <label for="password"> Password </label>
-        <input type="password" 
-        class="form-control" 
-        id="password" 
-        name="password" 
-        placeholder="Enter your Password Here!"/>
-    </div>
-
-
-<br/>
-<button type ="submit" class="btn btn-primary"> Log In </button>
-
-</form>
-{%endblock%}
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+    %}
+    <form method="POST">
+      <h3 align="center">Login</h3>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Enter email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Enter password"
+        />
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    {% endblock %}
+    
