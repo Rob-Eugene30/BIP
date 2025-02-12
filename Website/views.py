@@ -50,11 +50,11 @@ def delete_note():
 def admin_panel():
     # Check if the current user is an admin
     if not current_user.is_admin:
-        return redirect(url_for('index'))  # Redirect non-admin users to home page
+        return render_template("home.html", user=current_user,)  # Redirect non-admin users to home page
 
 
     # Retrieve all users and notes from the database
     users = User.query.all()
     notes = Note.query.all()
 
-    return render_template('admin_panel.html', users=users, notes=notes)
+    return render_template('/admin_panel.html', users=users, notes=notes, user=current_user)
