@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Admin Panel</h1>
+    
+    <h2>Users</h2>
+    <table>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Is Admin?</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.is_admin }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Notes</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Created At</th>
+        </tr>
+        {% for note in notes %}
+            <tr>
+                <td>{{ note.title }}</td>
+                <td>{{ note.content }}</td>
+                <td>{{ note.created_at }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

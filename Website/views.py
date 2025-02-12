@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Note, User
 from . import db
 import json
 
@@ -44,3 +44,17 @@ def delete_note():
     else:
         flash('You do not have permission to delete this note.', category='error')
         return jsonify({"message": "Failed to delete"}), 403  # Return error response
+    
+@views.route('/admin')
+@login_required
+def admin_panel():
+    # Check if the current user is an admin
+    if not current_user.is_admin:
+        return redirect(url_for('index'))  # Redirect non-admin users to home page
+
+
+    # Retrieve all users and notes from the database
+    users = User.query.all()
+    notes = Note.query.all()
+
+    return render_template('admin_panel.html', users=users, notes=notes)
