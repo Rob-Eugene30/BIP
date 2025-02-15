@@ -1,26 +1,61 @@
 {% extends "base.html" %}
 
-{% block title %}
-Home
-{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align="center">Notes</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for note in notes %}
-  <li class="list-group-item" id="note-{{ note.id }}">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
-</ul>
-<form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
-  </div>
-</form>
+<h2>Documents</h2>
+
+<!-- Display each document -->
+{% for document in documents %}
+<div class="document">
+    <h3>{{ document.title }}</h3>
+    <p><a href="{{ url_for('static', filename='uploads/' + document.filename) }}" target="_blank">View Document</a></p>
+    
+    <!-- Comment Section -->
+    <div class="comments">
+        <h4>Comments</h4>
+        
+        <!-- Display existing comments -->
+        {% for comment in document.comments %}
+            <div class="comment" id="comment-{{ comment.id }}">
+                <p><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
+                {% if current_user.id == comment.user_id %}
+                    <button onclick="deleteComment({{ comment.id }})">Delete</button>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <!-- Comment Form -->
+        <form method="POST" action="{{ url_for('views.add_comment', doc_id=document.id) }}">
+            <input type="hidden" name="document_id" value="{{ document.id }}">
+            <textarea name="comment_text" required placeholder="Write a comment..."></textarea>
+            <button type="submit">Comment</button>
+        </form>
+    </div>
+</div>
+<hr>
+{% endfor %}
+
+<script>
+    function deleteComment(commentId) {
+        fetch("/delete-comment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ commentId: commentId })
+        })
+        .then(response => response.json().catch(() => ({})))
+        .then(data => {
+            if (data.message === "Comment deleted") {
+                document.getElementById("comment-" + commentId).remove();
+            } else {
+                alert("Failed to delete comment!");
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            alert("An error occurred while deleting the comment.");
+        });
+    }
+</script>
+
 {% endblock %}

@@ -2,7 +2,13 @@
 
 {% block content %}
     <h1>Admin Panel</h1>
-    
+
+    <h2>Upload a Document</h2>
+    <form action="{{ url_for('views.upload_document') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
     <h2>Users</h2>
     <table>
         <tr>

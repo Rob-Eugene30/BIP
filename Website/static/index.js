@@ -1,22 +1,27 @@
-function deleteNote(noteId) {
-  fetch("/delete-note", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ noteId: noteId })
-  })
-  .then(response => response.json())  // Expecting a JSON response
-  .then(data => {
-      if (data.message === "Note deleted") {
-          // Remove the note from the UI after successful deletion
-          document.getElementById("note-" + noteId).remove();
-      } else {
-          alert('Failed to delete the note!');
-      }
-  })
-  .catch(err => {
-      console.error("Error deleting note:", err);
-      alert('An error occurred while deleting the note.');
-  });
+function deleteComment(commentId) {
+    fetch("/delete-comment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ commentId: commentId })
+    })
+    .then(response => response.json().catch(() => ({}))) // Prevents JSON parsing errors
+    .then(data => {
+        if (data.message === "Comment deleted") {
+            // Remove the comment from the UI
+            const commentElement = document.getElementById("comment-" + commentId);
+            if (commentElement) {
+                commentElement.remove();
+            } else {
+                console.warn("Comment element not found in DOM.");
+            }
+        } else {
+            alert("Failed to delete the comment!");
+        }
+    })
+    .catch(err => {
+        console.error("Error deleting comment:", err);
+        alert("An error occurred while deleting the comment.");
+    });
 }
