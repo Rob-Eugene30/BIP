@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
 from .models import Note, User
 from . import db
@@ -8,7 +8,8 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def welcome():
-    return render_template("Welcome.html")
+    session.clear() 
+    return render_template("welcome.html")
 
 @views.route('/home.html', methods=['GET', 'POST'])
 @login_required

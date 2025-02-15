@@ -40,6 +40,11 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
+    # Ensure session cookies are not persistent
+    app.config['REMEMBER_COOKIE_DURATION'] = None  # Session cookie (deleted when browser closes)
+    app.config['SESSION_COOKIE_SECURE'] = True  # Optional: Ensure cookies are only sent over HTTPS
+    app.config['SESSION_COOKIE_HTTPONLY'] = True  # Optional: Prevent JavaScript access to cookies
+    app.config['SESSION_REFRESH_EACH_REQUEST'] = True  # Refresh session on each request
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
