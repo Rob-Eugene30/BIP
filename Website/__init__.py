@@ -5,16 +5,20 @@ from flask_login import LoginManager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
+import os
+
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
+
+    app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), "Website", "static", "uploads")
+
 
     from .views import views
     from .auth import auth

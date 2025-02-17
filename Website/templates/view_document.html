@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ document.title }}</h2>
+<p><a href="{{ url_for('static', filename='uploads/' + document.filename) }}" target="_blank">View Document</a></p>
+
+<h3>Comments</h3>
+{% for comment in comments %}
+    <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('views.add_comment', doc_id=document.id) }}">
+    <textarea name="comment_text" required placeholder="Write a comment..."></textarea>
+    <button type="submit">Add Comment</button>
+</form>
+{% endblock %}
