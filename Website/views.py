@@ -63,7 +63,7 @@ def view_document(doc_id):
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
-@views.route('/home.html', methods=['GET', 'POST'])
+@views.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
     documents = Document.query.all()
