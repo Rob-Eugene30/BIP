@@ -25,19 +25,5 @@
         {% endfor %}
     </table>
 
-    <h2>Notes</h2>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Content</th>
-            <th>Created At</th>
-        </tr>
-        {% for note in notes %}
-            <tr>
-                <td>{{ note.title }}</td>
-                <td>{{ note.content }}</td>
-                <td>{{ note.created_at }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    
 {% endblock %}
