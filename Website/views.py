@@ -119,4 +119,4 @@ def audit_report():
         return redirect(url_for('views.home'))
     
     logs = AuditTrail.query.order_by(AuditTrail.timestamp.desc()).all()
-    return render_template('audit_report.html', audit_logs=logs)
+    return render_template('audit_report.html', audit_logs=logs, user=current_user)
