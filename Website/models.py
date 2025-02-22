@@ -1,6 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
+from datetime import datetime
 
 
 class Note(db.Model):
@@ -36,3 +37,9 @@ class Comment(db.Model):
 
     user = db.relationship('User', backref='comments')
     document = db.relationship('Document', backref='comments')
+
+class AuditTrail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    user_email = db.Column(db.String(150))
+    action = db.Column(db.String(500))

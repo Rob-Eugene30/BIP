@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for, redirect, send_from_directory, current_app
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-from .models import Note, User, Document, Comment
+from .models import Note, User, Document, Comment, AuditTrail
 from . import db
 import json
 import os

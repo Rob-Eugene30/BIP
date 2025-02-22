@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Audit Trail Report</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in audit_logs %}
+            <tr>
+                <td>{{ log.timestamp }}</td>
+                <td>{{ log.user_email }}</td>
+                <td>{{ log.action }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{{ url_for('views.admin_panel') }}" class="btn btn-primary">Back to Admin Panel</a>
+{% endblock %}
