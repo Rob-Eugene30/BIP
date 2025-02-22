@@ -10,6 +10,13 @@ views = Blueprint('views', __name__)
 
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt', 'png', 'jpg', 'jpeg'}
 
+#Logging for audit trail function:
+def log_action(user_email, action):
+    audit_entry = AuditTrail(user_email=user_email, action=action)
+    db.session.add(audit_entry)
+    db.session.commit()
+
+
 @views.route('/')
 def welcome():
     session.clear() 
@@ -40,6 +47,7 @@ def upload_document():
         new_document = Document(title=filename, filename=filename)
         db.session.add(new_document)
         db.session.commit()
+        log_action(current_user.email, "Uploaded a document")
         flash("Document uploaded successfully!", "success")
     else:
         flash("Invalid file type!", "error")
@@ -102,3 +110,13 @@ def delete_comment(comment_id):
     db.session.delete(comment)
     db.session.commit()
     return redirect(url_for('views.view_document', doc_id=comment.document_id))  # Fixed `url_for`
+
+@views.route('/admin/audit-report')
+@login_required
+def audit_report():
+    if not current_user.is_admin:
+        flash("Access denied!", "error")
+        return redirect(url_for('views.home'))
+    
+    logs = AuditTrail.query.order_by(AuditTrail.timestamp.desc()).all()
+    return render_template('audit_report.html', audit_logs=logs)
