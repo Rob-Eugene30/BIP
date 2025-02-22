@@ -38,10 +38,14 @@ def create_app():
         db.create_all()
 
         # Create admin user if it doesn't exist
-        admin_user = User.query.filter_by(email="admin@ebip.com").first()
-        if not admin_user:
+        admin_email = "admin@bip.com"
+
+        # Check if the admin user exists
+        existing_user = User.query.filter_by(email=admin_email).first()
+
+        if not existing_user:
             hashed_password = generate_password_hash("adminpass", method="scrypt")
-            admin_user = User(firstName="admin", email="admin@bip.com", password=hashed_password, is_admin=True)
+            admin_user = User(firstName="admin", email=admin_email, password=hashed_password, is_admin=True)
             db.session.add(admin_user)
             db.session.commit()
             print("Admin user created with hashed password!")
