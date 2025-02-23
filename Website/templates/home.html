@@ -9,7 +9,7 @@
 {% for document in documents %}
 <div class="document">
     <h3>{{ document.title }}</h3>
-    <p><a href="{{ url_for('static', filename='uploads/' + document.filename) }}" target="_blank">View Document</a></p>
+    <p><a href="{{ url_for('views.get_document', doc_id=document.id) }}" target="_blank">View Document</a></p>
     
     <!-- Comment Section -->
     <div class="comments">

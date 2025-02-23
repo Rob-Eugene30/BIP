@@ -17,7 +17,6 @@ class User(db.Model, UserMixin):
     firstName = db.Column(db.String(150), nullable=False)  # For first name
     password = db.Column(db.String(150), nullable=False)  # For storing password hash
     is_admin = db.Column(db.Boolean, default=False)  # Optional: for admin flag
-    #password_confirm = db.Column(db.String(150), nullable=False)  # Added for password confirmation (for form logic, not stored in DB)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -25,7 +24,8 @@ class User(db.Model, UserMixin):
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
-    filename = db.Column(db.String(255), nullable=False)  # Stores the file path
+    filename = db.Column(db.String(255), nullable=False)  # Stores original filename
+    data = db.Column(db.LargeBinary, nullable=False)  # Stores file content
     uploaded_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 class Comment(db.Model):

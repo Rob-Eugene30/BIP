@@ -5,10 +5,13 @@ from flask_login import LoginManager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 
 db = SQLAlchemy()
+migrate = Migrate()
 DB_NAME = "database.db"
 
 def create_app():
@@ -16,6 +19,8 @@ def create_app():
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
+
+    migrate.init_app(app, db)
 
     app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), "Website", "static", "uploads")
 
@@ -27,18 +32,24 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
 
     # Import User and Note models here after app initialization to avoid circular import
-    from .models import User, Note
+    from .models import User, Note, Document, Comment, AuditTrail
 
     with app.app_context():
         db.create_all()
 
         # Create admin user if it doesn't exist
-        admin_user = User.query.filter_by(firstName="admin").first()
-        if not admin_user:
-            admin_user = User(firstName="admin", email="admin@example.com", password="adminpass", is_admin=True)
+        admin_email = "admin@bip.com"
+
+        # Check if the admin user exists
+        existing_user = User.query.filter_by(email=admin_email).first()
+
+        if not existing_user:
+            hashed_password = generate_password_hash("adminpass", method="scrypt")
+            admin_user = User(firstName="admin", email=admin_email, password=hashed_password, is_admin=True)
             db.session.add(admin_user)
             db.session.commit()
-            print("Admin user created!")
+            print("Admin user created with hashed password!")
+
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
