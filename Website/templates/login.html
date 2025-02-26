@@ -1,29 +1,49 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
-    %}
-    <form method="POST">
-      <h3 align="center">Login</h3>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          placeholder="Enter password"
-        />
-      </div>
-      <br />
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    {% endblock %}
-    
+{% extends "base.html" %} 
+{% block title %}Login{% endblock %} 
+
+{% block content %}
+<br/>
+<section class="header2">
+    <div class="d-flex h-100 align-items-center hero__content-width">
+        <div class="text-dark text-center w-100">
+            <h1 class="text-dark hero__heading fw-bold mb-4" style="font-size: 3rem;">Welcome Back!</h1>
+            <p class="lead mb-4"><i>Log in to access your dashboard and stay updated with the latest news from Barangay Bagtas.</i></p>
+        </div>
+    </div>
+</section>    
+
+<section class="text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Side: Login Form -->
+            <div class="col-md-6">
+                <div class="card p-4 shadow-lg">
+                    <h3 class="text-center text-dark">Login</h3>
+                    <form method="POST">
+                        <div class="form-group mb-3">
+                            <label for="email" class="text-dark">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="password" class="text-dark">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
+                        </div>
+                        <button type="submit" class="btn w-100" style="background-color: #0F62FE; border-color: #0F62FE; color: white;">Log In</button>
+                        <p class="mt-3 text-center text-dark">
+                            Don't have an account? 
+                            <a href="{{ url_for('auth.sign_up') }}" class="text-decoration-underline text-primary fw-bold">Sign Up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side: Image -->
+            <div class="col-md-6 text-center">
+              <img src="https://i.pinimg.com/736x/a4/c6/60/a4c660df1c00640955d4f575383fcbef.jpg" 
+                alt="BRGY BAGTAS LOGO" 
+                class="img-fluid rounded-circle shadow-lg">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
