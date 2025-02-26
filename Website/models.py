@@ -43,3 +43,12 @@ class AuditTrail(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     user_email = db.Column(db.String(150))
     action = db.Column(db.String(500))
+
+class Announcement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)  # Title of the announcement
+    content = db.Column(db.Text, nullable=False)  # Content of the announcement
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())  # Timestamp
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # User who created the announcement
+
+    user = db.relationship('User', backref='announcements')  # Relationship to User

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for, redirect, send_from_directory, current_app
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-from .models import Note, User, Document, Comment, AuditTrail
+from .models import Note, User, Document, Comment, AuditTrail, Announcement
 from . import db
 import json
 import os
@@ -102,3 +102,46 @@ def delete_comment(comment_id):
     db.session.delete(comment)
     db.session.commit()
     return redirect(url_for('views.view_document', doc_id=comment.document_id))  # Fixed `url_for`
+
+@views.route('/announcements')
+@login_required
+def announcements():
+    announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
+    return render_template('announcements.html', announcements=announcements, user=current_user)
+
+@views.route('/add_announcement', methods=['GET', 'POST'])
+@login_required
+def add_announcement():
+    if not current_user.is_admin:  # Only allow admins to add announcements
+        flash("You are not authorized to add announcements!", "error")
+        return redirect(url_for('views.home'))
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+
+        if not title or not content:
+            flash('Title and content are required!', 'error')
+            return redirect(url_for('views.add_announcement'))
+
+        new_announcement = Announcement(title=title, content=content, user_id=current_user.id)
+        db.session.add(new_announcement)
+        db.session.commit()
+        flash('Announcement added successfully!', 'success')
+        return redirect(url_for('views.announcements'))
+
+    return render_template('add_announcement.html', user=current_user)
+
+@views.route('/delete_announcement/<int:announcement_id>', methods=['POST'])
+@login_required
+def delete_announcement(announcement_id):
+    announcement = Announcement.query.get_or_404(announcement_id)
+
+    if announcement.user_id != current_user.id and not current_user.is_admin:
+        flash("You can only delete your own announcements!", "error")
+        return redirect(url_for('views.announcements'))
+
+    db.session.delete(announcement)
+    db.session.commit()
+    flash('Announcement deleted successfully!', 'success')
+    return redirect(url_for('views.announcements'))
