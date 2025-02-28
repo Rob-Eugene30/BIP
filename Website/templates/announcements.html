@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Announcements</h1>
+    {% if announcements %}
+        {% for announcement in announcements %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ announcement.title }}</h5>
+                    <p class="card-text">{{ announcement.content }}</p>
+                    <p class="text-muted">Posted by {{ announcement.user.email }} on {{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    {% if current_user.id == announcement.user_id or current_user.is_admin %}
+                        <form action="{{ url_for('views.delete_announcement', announcement_id=announcement.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No announcements yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
