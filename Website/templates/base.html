@@ -32,8 +32,8 @@
 
       /* Sidebar Styling */
       .sidebar {
-        width: 200px;
-        background-color: #343a40;
+        width: 70px; /* Closed by default */
+        background-color: rgb(8, 9, 56);
         padding-top: 20px;
         height: 100vh;
         position: fixed;
@@ -41,6 +41,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        z-index: 1000; /* Ensure sidebar is above other content */
       }
 
       .sidebar a {
@@ -58,24 +59,24 @@
       /* Text Fade-Out Effect */
       .sidebar .nav-links {
         transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
-        max-height: 500px;
-        opacity: 1;
+        max-height: 0; /* Initially hidden */
+        opacity: 0; /* Initially hidden */
         overflow: hidden;
       }
 
-      /* Collapsed Sidebar */
-      .sidebar.hidden {
-        width: 70px;
+      /* Expanded Sidebar */
+      .sidebar.expanded {
+        width: 200px;
       }
 
-      .sidebar.hidden .nav-links {
-        max-height: 0;
-        opacity: 0;
+      .sidebar.expanded .nav-links {
+        max-height: 500px;
+        opacity: 1;
       }
 
       /* Navbar Styling */
       .navbar {
-        background-color: #343a40;
+        background-color:rgb(8, 9, 56);
         width: 100%;
         padding: 10px;
         display: flex;
@@ -94,14 +95,14 @@
       }
 
       .content {
-        margin-left: 250px;
+        margin-left: 70px; /* Adjusted for closed sidebar */
         padding: 20px;
         width: 100%;
         transition: margin-left 0.3s ease-in-out;
       }
 
-      .content.expanded {
-        margin-left: 50px;
+      .content.expanded ~ #overlay {
+        margin-left: 200px; /* Adjusted for expanded sidebar */
       }
     </style>
     <title>{% block title %}BASE{% endblock %}</title>
@@ -162,12 +163,24 @@
     ></script>
 
     <script>
-      document.getElementById("toggle-btn").addEventListener("click", function() {
+      document.getElementById("toggle-btn").addEventListener("click", function(event) {
+        event.stopPropagation(); // Prevent the click from propagating to the document
         let sidebar = document.getElementById("sidebar");
         let content = document.getElementById("content");
 
-        sidebar.classList.toggle("hidden");
+        sidebar.classList.toggle("expanded");
         content.classList.toggle("expanded");
+      });
+
+      // Close the sidebar when clicking outside of it
+      document.addEventListener("click", function(event) {
+        let sidebar = document.getElementById("sidebar");
+        let content = document.getElementById("content");
+
+        if (!sidebar.contains(event.target)) {
+          sidebar.classList.remove("expanded");
+          content.classList.remove("expanded");
+        }
       });
     </script>
 
