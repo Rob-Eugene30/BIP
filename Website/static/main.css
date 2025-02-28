@@ -5,6 +5,10 @@
     --bs-body-font-family: 'Montserrat', sans-serif;
 }
 
+.bg-dark-blue {
+    background-color: #03041f !important; /* Dark blue */
+}
+
 html{scroll-behavior: smooth;}
 
 a { color: var(--primary-color);}
