@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for, redirect, send_file, current_app, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-from .models import Note, User, Document, Comment, AuditTrail, Announcement
+from .models import Note, User, Document, Comment, AuditTrail, Announcement, ForumPost, ForumComment
 from . import db
 import json
 import io
+from datetime import datetime
 
 views = Blueprint('views', __name__)
 
@@ -115,6 +116,8 @@ def delete_comment(comment_id):
     db.session.commit()
     return redirect(url_for('views.view_document', doc_id=comment.document_id))
 
+
+#Audit Trail:
 @views.route('/admin/audit-report')
 @login_required
 def audit_report():
@@ -125,6 +128,7 @@ def audit_report():
     logs = AuditTrail.query.order_by(AuditTrail.timestamp.desc()).all()
     return render_template('audit_report.html', audit_logs=logs, user=current_user)
 
+#Download Document:
 @views.route('/documents/<int:doc_id>/download')
 @login_required
 def download_document(doc_id):
@@ -136,6 +140,8 @@ def download_document(doc_id):
         download_name=doc.filename  # Uses stored filename
     )
 
+
+#Announcements:
 @views.route('/announcements')
 @login_required
 def announcements():
@@ -178,3 +184,48 @@ def delete_announcement(announcement_id):
     db.session.commit()
     flash('Announcement deleted successfully!', 'success')
     return redirect(url_for('views.announcements'))
+
+#Forums:
+@views.route('/forums')
+@login_required
+def forums():
+    posts = ForumPost.query.order_by(ForumPost.created_at.desc()).all()
+    return render_template("forums.html", posts=posts, user=current_user)
+
+@views.route('/add_forum_post', methods=['POST'])
+@login_required
+def add_forum_post():
+    title = request.form.get('title')
+    content = request.form.get('content')
+
+    if not title or not content:
+        flash("Title and content are required!", "error")
+        return redirect(url_for('views.forums'))
+
+    new_post = ForumPost(title=title, content=content, user_id=current_user.id, created_at=datetime.utcnow())
+    db.session.add(new_post)
+    db.session.commit()
+
+    log_action(current_user.email, f"Created a new forum discussion: '{title}'")
+    flash("Discussion posted successfully!", "success")
+    return redirect(url_for('views.forums'))
+
+@views.route('/forums/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def forum_post(post_id):
+    post = ForumPost.query.get_or_404(post_id)
+    comments = ForumComment.query.filter_by(post_id=post.id).order_by(ForumComment.created_at).all()
+
+    if request.method == 'POST':
+        content = request.form.get('content')
+        if not content:
+            flash("Comment cannot be empty!", "error")
+        else:
+            new_comment = ForumComment(content=content, user_id=current_user.id, post_id=post.id)
+            db.session.add(new_comment)
+            db.session.commit()
+            log_action(current_user.email, f"Commented on forum post: '{post.title}'")
+            flash("Comment added!", "success")
+            return redirect(url_for('views.forum_post', post_id=post.id))
+
+    return render_template("forum_post.html", post=post, comments=comments, user=current_user)

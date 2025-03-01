@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Forums{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Community Forums</h2>
+
+    <!-- Form to create a new discussion -->
+    {% if user.is_authenticated %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Start a Discussion</h5>
+            <form method="POST" action="{{ url_for('views.add_forum_post') }}">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-center">You need to <a href="{{ url_for('auth.login') }}">log in</a> to start a discussion.</p>
+    {% endif %}
+
+    <!-- Display forum posts -->
+    <div class="forum-posts">
+        {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('views.forum_post', post_id=post.id) }}">{{ post.title }}</a>
+                </h5>
+                <p class="card-text">{{ post.content[:200] }}...</p>
+                <p class="text-muted">Posted by {{ post.user.firstName }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center">No discussions yet. Be the first to start one!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
