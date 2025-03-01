@@ -82,7 +82,7 @@ def home():
     documents = Document.query.all()
     return render_template("home.html", documents=documents, user=current_user)
 
-@views.route('/admin')
+@views.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin_panel():
     if not current_user.is_admin:
@@ -148,28 +148,29 @@ def announcements():
     announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
     return render_template('announcements.html', announcements=announcements, user=current_user)
 
-@views.route('/add_announcement', methods=['GET', 'POST'])
+@views.route('/add_announcement', methods=['POST'])
 @login_required
 def add_announcement():
     if not current_user.is_admin:  # Only allow admins to add announcements
         flash("You are not authorized to add announcements!", "error")
         return redirect(url_for('views.home'))
 
-    if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
+    # if request.method == 'POST':
+    title = request.form.get('title')
+    content = request.form.get('content')
 
-        if not title or not content:
-            flash('Title and content are required!', 'error')
-            return redirect(url_for('views.add_announcement'))
+    if not title or not content:
+        flash('Title and content are required!', 'error')
+        return redirect(url_for('views.admin_panel'))
 
-        new_announcement = Announcement(title=title, content=content, user_id=current_user.id)
-        db.session.add(new_announcement)
-        db.session.commit()
-        flash('Announcement added successfully!', 'success')
-        return redirect(url_for('views.announcements'))
+    new_announcement = Announcement(title=title, content=content, user_id=current_user.id)
+    db.session.add(new_announcement)
+    db.session.commit()
+    log_action(current_user.email, f"Added announcement: '{title}'")
+    flash('Announcement added successfully!', 'success')
+    return redirect(url_for('views.admin_panel'))
 
-    return render_template('add_announcement.html', user=current_user)
+
 
 @views.route('/delete_announcement/<int:announcement_id>', methods=['POST'])
 @login_required
@@ -181,6 +182,7 @@ def delete_announcement(announcement_id):
         return redirect(url_for('views.announcements'))
 
     db.session.delete(announcement)
+    db.session.log_action(current_user.email, f"Deleted announcement: '{announcement.title}'")
     db.session.commit()
     flash('Announcement deleted successfully!', 'success')
     return redirect(url_for('views.announcements'))

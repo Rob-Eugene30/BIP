@@ -11,6 +11,22 @@
         <button type="submit">Upload</button>
     </form>
 
+    <div class="container">
+        <h1>Add Announcement</h1>
+        <form action="{{ url_for('views.add_announcement') }}" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+
     <h2>Users</h2>
     <table>
         <tr>
