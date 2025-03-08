@@ -15,7 +15,7 @@
     <div class="comments">
         {% for comment in comments %}
         <div class="card my-2">
-            <div class="card-body">
+            <div class="card-body" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 10px;">
                 <p class="card-text">{{ comment.content }}</p>
                 <p class="text-muted">- {{ comment.user.firstName }} ({{ comment.created_at.strftime('%Y-%m-%d %H:%M') }})</p>
             </div>
@@ -32,7 +32,7 @@
     <form method="POST">
         <div class="form-group">
             <label for="content">Your Reply:</label>
-            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+            <textarea class="form-control" id="content" name="content" rows="3" required style="border-radius: 10px;"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Reply</button>
     </form>

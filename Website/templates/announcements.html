@@ -4,11 +4,14 @@
 
 {% block content %}
 <div class="container">
-    <h1>Announcements</h1>
+    <br/>
+    <br/>
+    <h1>ANNOUNCEMENTS</h1>
+    <br/>
     {% if announcements %}
         {% for announcement in announcements %}
             <div class="card mb-3">
-                <div class="card-body">
+                <div class="card-body" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 10px;">
                     <h5 class="card-title">{{ announcement.title }}</h5>
                     <p class="card-text">{{ announcement.content }}</p>
                     <p class="text-muted">Posted by {{ announcement.user.email }} on {{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
