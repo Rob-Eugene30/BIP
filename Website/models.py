@@ -15,8 +15,15 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     firstName = db.Column(db.String(150), nullable=False)  # For first name
+    lastName = db.Column(db.String(150), nullable=False)
     password = db.Column(db.String(150), nullable=False)  # For storing password hash
     is_admin = db.Column(db.Boolean, default=False)  # Optional: for admin flag
+
+    address = db.Column(db.String(255), nullable=True)
+    birth_date = db.Column(db.Date, nullable=True)
+    birth_place = db.Column(db.String(255), nullable=True)
+    position = db.Column(db.String(50), nullable=True)  # For officials
+    is_verified = db.Column(db.Boolean, default=False)  # Admin approval required
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -43,6 +50,7 @@ class AuditTrail(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     user_email = db.Column(db.String(150))
     action = db.Column(db.String(500))
+    link = db.Column(db.String(500), nullable=True)
 
 class Announcement(db.Model):
     id = db.Column(db.Integer, primary_key=True)

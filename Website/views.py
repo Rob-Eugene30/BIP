@@ -12,8 +12,8 @@ views = Blueprint('views', __name__)
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt', 'png', 'jpg', 'jpeg'}
 
 # Logging for audit trail function:
-def log_action(user_email, action):
-    audit_entry = AuditTrail(user_email=user_email, action=action)
+def log_action(user_email, action, link=None):
+    audit_entry = AuditTrail(user_email=user_email, action=action, link=link)
     db.session.add(audit_entry)
     db.session.commit()
 
@@ -27,27 +27,33 @@ def allowed_file(filename):
 
 @views.route('/upload', methods=['POST'])
 @login_required
-def upload_document():
-    if not current_user.is_admin:  # Only admins can upload
-        flash("You are not authorized to upload documents!", "error")
-        return redirect(url_for('views.admin_panel'))
+def upload():
+    if not current_user.is_verified or (current_user.position is None and not current_user.is_admin):
+        flash("Access denied! Only admins and verified officials can upload documents.", "error")
+        return redirect(url_for('views.home'))
 
-    file = request.files.get('file')
+    if 'file' not in request.files:
+        flash('No file part', 'error')
+        return redirect(request.referrer)
+
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(request.referrer)
+
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file_data = file.read()  # Read file content as binary
-
-        # Store file metadata in the database
-        new_document = Document(title=filename, filename=filename, data=file_data)
+        new_document = Document(title=filename, filename=filename, data=file.read())
         db.session.add(new_document)
         db.session.commit()
-        
-        log_action(current_user.email, "Uploaded a document")
-        flash("Document uploaded successfully!", "success")
+        document_link = url_for('views.documents', document_id=new_document.id, _external=True)
+        log_action(current_user.email, "Uploaded a document", document_link)
+        flash('Document uploaded successfully!', 'success')
     else:
-        flash("Invalid file type!", "error")
+        flash('Invalid file format!', 'error')
 
-    return redirect(url_for('views.admin_panel'))
+    return redirect(request.referrer)
+
 
 @views.route('/documents')
 @login_required
@@ -151,24 +157,26 @@ def announcements():
 @views.route('/add_announcement', methods=['POST'])
 @login_required
 def add_announcement():
-    if not current_user.is_admin:  # Only allow admins to add announcements
-        flash("You are not authorized to add announcements!", "error")
+    if not current_user.is_verified or (current_user.position is None and not current_user.is_admin):
+        flash("Access denied!", "error")
         return redirect(url_for('views.home'))
 
-    # if request.method == 'POST':
     title = request.form.get('title')
     content = request.form.get('content')
 
-    if not title or not content:
-        flash('Title and content are required!', 'error')
-        return redirect(url_for('views.admin_panel'))
+    if title and content:
+        new_announcement = Announcement(title=title, content=content, user_id=current_user.id)
+        db.session.add(new_announcement)
+        db.session.commit()
 
-    new_announcement = Announcement(title=title, content=content, user_id=current_user.id)
-    db.session.add(new_announcement)
-    db.session.commit()
-    log_action(current_user.email, f"Added announcement: '{title}'")
-    flash('Announcement added successfully!', 'success')
-    return redirect(url_for('views.admin_panel'))
+        # ✅ Log action with a clickable link
+        announcement_link = url_for('views.view_announcement', announcement_id=new_announcement.id, _external=True)
+        log_action(current_user.email, f"Posted a new announcement: {title}", announcement_link)
+
+        flash('Announcement posted successfully!', 'success')
+
+    return redirect(url_for('views.announcements'))
+
 
 
 
@@ -231,3 +239,37 @@ def forum_post(post_id):
             return redirect(url_for('views.forum_post', post_id=post.id))
 
     return render_template("forum_post.html", post=post, comments=comments, user=current_user)
+
+#Verification of officials
+@views.route('/admin/verify_officials', methods=['GET', 'POST'])
+@login_required
+def verify_officials():
+    if not current_user.is_admin:
+        flash("Access denied!", "error")
+        return redirect(url_for('views.home'))
+    
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        user = User.query.get(user_id)
+        if user:
+            user.is_verified = True
+            db.session.commit()
+            log_action(current_user.email, f"Verified official: {user.email}")
+
+            flash(f"User {user.email} has been verified!", "success")
+        else:
+            flash("User not found!", "error")
+    
+    pending_officials = User.query.filter(User.is_verified == False, User.position.isnot(None)).all()
+    return render_template('verify_officials.html', pending_officials=pending_officials, user=current_user)
+
+
+#official_Panel
+@views.route('/official_panel')
+@login_required
+def official_panel():
+    if not current_user.is_verified or current_user.position is None:
+        flash("Access denied! Only verified officials can access this page.", "error")
+        return redirect(url_for('views.home'))
+
+    return render_template("official_panel.html", user=current_user)

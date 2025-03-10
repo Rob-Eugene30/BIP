@@ -124,10 +124,12 @@
           <a href="/logout">Logout</a>
           {% if user.is_admin %}
             <a href="/admin">Admin Panel</a>
+          {% elif user.position is not none and user.is_verified %}
+            <a href="/official_panel">Official Panel</a>
           {% endif %}
         {% else %}
           <a href="/login">Login</a>
-          <a href="/sign_up">Sign Up</a>
+          <a href="/sign_up_selection">Sign Up</a>
         {% endif %}
       </div>
     </div>
