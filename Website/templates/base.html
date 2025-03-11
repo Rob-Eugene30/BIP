@@ -109,33 +109,39 @@
   </head>
   <body>
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-      <!-- Navbar inside the sidebar -->
-      <nav class="navbar">
-        <button class="toggle-btn" id="toggle-btn">☰</button>
-      </nav>
+<div class="sidebar" id="sidebar">
+  <!-- Navbar inside the sidebar -->
+  <nav class="navbar">
+    <button class="toggle-btn" id="toggle-btn">☰</button>
+  </nav>
 
-      <!-- Links (wrapped in a div so they can fade out) -->
-      <div class="nav-links">
-        <a href="/home">Home</a>
-        {% if user.is_authenticated %}
-          <a href="/documents">Documents</a>
-          <a href="/forums">Forums</a>
-          <a href="/announcements">Announcements</a>
-          <a href="/logout">Logout</a>
-          <a href="/FAQ">FAQ</a>
-          <a href="/account">Account</a>
-          {% if user.is_admin %}
-            <a href="/admin">Admin Panel</a>
-          {% elif user.position is not none and user.is_verified %}
-            <a href="/official_panel">Official Panel</a>
-          {% endif %}
-        {% else %}
-          <a href="/login">Login</a>
-          <a href="/sign_up_selection">Sign Up</a>
-        {% endif %}
-      </div>
+  <!-- Links (wrapped in a div so they can fade out) -->
+  <div class="nav-links">
+    <a href="/home">Home</a>
+    {% if user.is_authenticated %}
+      <a href="/documents">Documents</a>
+      <a href="/forums">Forums</a>
+      <a href="/announcements">Announcements</a>
+      <a href="/FAQ">FAQ</a>
+      <a href="/account">Account</a>
+      {% if user.is_admin %}
+        <a href="/admin">Admin Panel</a>
+      {% elif user.position is not none and user.is_verified %}
+        <a href="/official_panel">Official Panel</a>
+      {% endif %}
+    {% else %}
+      <a href="/login">Login</a>
+      <a href="/sign_up_selection">Sign Up</a>
+    {% endif %}
+  </div>
+
+  <!-- Logout Link (placed at the bottom) -->
+  {% if user.is_authenticated %}
+    <div class="nav-links" style="margin-top: auto;">
+      <a href="/logout">Logout</a>
     </div>
+  {% endif %}
+</div>
 
     <!-- Main Content -->
     <div class="content" id="content">

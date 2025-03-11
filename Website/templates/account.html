@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Information</title>
+{% extends "base.html" %}
+
+{% block title %}Account Information{% endblock %}
+
+{% block content %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -38,7 +37,7 @@
                 radial-gradient(circle at 90% 80%, rgba(58, 12, 163, 0.05) 0%, transparent 20%);
         }
 
-        .container {
+        .container1 {
             max-width: 800px;
             margin: 60px auto;
             padding: 40px;
@@ -227,8 +226,8 @@
         .info-item:nth-child(5) { animation-delay: 0.5s; }
     </style>
 </head>
-<body>
-    <div class="container">
+
+    <div class="container1">
         <h1>Account Information</h1>
         
         <div class="info-item">
@@ -265,5 +264,4 @@
             <i class="fas fa-edit"></i> Edit Account
         </a>
     </div>
-</body>
-</html>
+    {% endblock %}
