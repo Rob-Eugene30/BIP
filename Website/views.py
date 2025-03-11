@@ -109,6 +109,8 @@ def add_comment(doc_id):
     new_comment = Comment(user_id=current_user.id, document_id=doc_id, content=content)
     db.session.add(new_comment)
     db.session.commit()
+    document_link = url_for('views.view_document', doc_id=doc_id, _external=True)
+    log_action(current_user.email, f"Commented on document ID {doc_id}", document_link)
     return redirect(url_for('views.view_document', doc_id=doc_id))
 
 @views.route('/comments/<int:comment_id>/delete', methods=['POST'])
