@@ -246,7 +246,8 @@ def forum_post(post_id):
             new_comment = ForumComment(content=content, user_id=current_user.id, post_id=post.id)
             db.session.add(new_comment)
             db.session.commit()
-            log_action(current_user.email, f"Commented on forum post: '{post.title}'")
+            comment_link = url_for('views.forum_post', post_id=post.id, _external=True)
+            log_action(current_user.email, f"Commented on forum post: '{post.title}'", comment_link)
             flash("Comment added!", "success")
             return redirect(url_for('views.forum_post', post_id=post.id))
 
