@@ -119,15 +119,19 @@
       <div class="nav-links">
         <a href="/home">Home</a>
         {% if user.is_authenticated %}
+          <a href="/documents">Documents</a>
           <a href="/forums">Forums</a>
           <a href="/announcements">Announcements</a>
           <a href="/logout">Logout</a>
+          <a href="/FAQ">FAQ</a>
           {% if user.is_admin %}
             <a href="/admin">Admin Panel</a>
+          {% elif user.position is not none and user.is_verified %}
+            <a href="/official_panel">Official Panel</a>
           {% endif %}
         {% else %}
           <a href="/login">Login</a>
-          <a href="/sign_up">Sign Up</a>
+          <a href="/sign_up_selection">Sign Up</a>
         {% endif %}
       </div>
     </div>

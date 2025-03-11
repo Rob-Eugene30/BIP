@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Official{% endblock %}
+
+{% block content %}
+<br/>
+<section class="header2">
+    <div class="d-flex h-100 align-items-center hero__content-width">
+        <div class="text-dark text-center w-100">
+            <h1 class="text-dark hero__heading fw-bold mb-4" style="font-size: 3rem;">Sign Up as an Official</h1>
+            <p class="lead mb-4"><i>Register as an official and manage Barangay Bagtas announcements and documents.</i></p>
+        </div>
+    </div>
+</section>    
+
+<section class="text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Side: Image -->
+            <div class="col-md-6 text-center">
+                <img src="https://i.pinimg.com/736x/a4/c6/60/a4c660df1c00640955d4f575383fcbef.jpg" 
+                alt="BRGY BAGTAS LOGO" 
+                class="img-fluid rounded-circle shadow-lg">
+            </div>
+            
+            <!-- Right Side: Sign-up Form -->
+            <div class="col-md-6">
+                <div class="card p-4 shadow-lg">
+                    <h3 class="text-center text-dark">Official Sign-Up</h3>
+                    <form method="POST">
+                        <div class="form-group mb-3">
+                            <label for="email" class="text-dark">Email Address</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter email" required />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-dark">First Name</label>
+                            <input type="text" class="form-control" name="firstName" placeholder="Enter first name" required />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-dark">Last Name</label>
+                            <input type="text" class="form-control" name="lastName" placeholder="Enter last name" required />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-dark">Address</label>
+                            <input type="text" class="form-control" name="address" placeholder="Enter address" required />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-dark">Birth Date</label>
+                            <input type="date" class="form-control" name="birth_date" required />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-dark">Birth Place</label>
+                            <input type="text" class="form-control" name="birth_place" placeholder="Enter birth place" required />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-dark">Position</label>
+                            <select class="form-control" name="position" required>
+                                <option value="">Select Position</option>
+                                <option value="Barangay Official">Barangay Official</option>
+                                <option value="Barangay Staff">Barangay Staff</option>
+                                <option value="SK Official">SK Official</option>
+                                <option value="SK Staff">SK Staff</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn w-100" style="background-color: #0F62FE; color: white;">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
