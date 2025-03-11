@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Voters{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Verify Voters</h1>
+
+    <form id="voterForm" action="{{ url_for('views.update_voter_status') }}" method="POST">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Voter Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users if not user.is_admin %}
+                        <tr>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            
+                            <td>
+                                {% if user.voter_status == "Underage" %}
+                                    <span class="text-danger fw-bold">Underage</span>
+                                    <input type="hidden" name="statuses[{{ user.id }}]" value="Underage">
+                                {% else %}
+                                    <select name="statuses[{{ user.id }}]" class="form-select">
+                                        <option value="Pending" {% if user.voter_status == "Pending" %}selected{% endif %}>Pending</option>
+                                        <option value="Pending Voter Stub" {% if user.voter_status == "Pending Voter Stub" %}selected{% endif %}>Pending Voter Stub</option>
+                                        <option value="Pending Voter ID" {% if user.voter_status == "Pending Voter ID" %}selected{% endif %}>Pending Voter ID</option>
+                                        <option value="Eligible to vote" {% if user.voter_status == "Eligible to vote" %}selected{% endif %}>Eligible to vote</option>
+                                        <option value="Voter" {% if user.voter_status == "Voter" %}selected{% endif %}>Voter</option>
+                                    </select>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg">
+                 Update
+            </button>
+        </div>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="{{ url_for('views.admin_panel') }}" class="btn btn-secondary">
+             Back to Admin Panel
+        </a>
+    </div>
+</div>
+
+{% endblock %}

@@ -329,3 +329,52 @@ def account_edit():
 
     # If it's a GET request, just render the edit form
     return render_template("account_edit.html", user=current_user)
+
+#Verification of voters
+@views.route('/admin/verify_voters')
+@login_required
+def verify_voters():
+    """Displays the voter verification page and automatically marks underage users."""
+    if not current_user.is_admin:
+        flash("Access denied!", "error")
+        return redirect(url_for('views.home'))
+    
+    users = User.query.all()  # Fetch all users
+
+    # Automatically mark users as "Underage" if they are 14 or younger
+    today = datetime.today()
+    for user in users:
+        if user.birth_date:
+            age = today.year - user.birth_date.year - ((today.month, today.day) < (user.birth_date.month, user.birth_date.day))
+            if age <= 14 and user.voter_status != "Underage":
+                user.voter_status = "Underage"
+                db.session.commit()  # Save the change
+
+    return render_template('verify_voters.html', users=users, user=current_user)
+
+@views.route('/admin/update_voter_status', methods=['POST'])
+@login_required
+def update_voter_status():
+    if not current_user.is_admin:
+        flash("Access denied!", "error")
+        return redirect(url_for('views.admin_panel'))
+    
+    statuses = request.form.getlist('statuses')
+    
+    for user_id, status in request.form.get('statuses', {}).items():
+        user = User.query.get(user_id)
+        if user:
+            today = datetime.today()
+            age = today.year - user.birth_date.year - ((today.month, today.day) < (user.birth_date.month, user.birth_date.day))
+
+            # Prevent changing status of underage users
+            if age <= 14 and status != "Underage":
+                flash(f"{user.firstName} is underage and cannot be verified as a voter.", "error")
+                continue  # Skip this user
+
+            user.voter_status = status
+            db.session.commit()
+            log_action(current_user.email, f"Updated voter status of {user.email} to {status}")
+
+    flash("Voter statuses updated successfully!", "success")
+    return redirect(url_for('views.verify_voters'))

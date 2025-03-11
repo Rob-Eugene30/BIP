@@ -259,6 +259,12 @@
             <span class="info-label"><i class="fas fa-birthday-cake icon"></i>Age:</span>
             <span class="info-value">{{ age }}</span>
         </div>
+
+        <div class="info-item">
+            <span class="info-label"><i class="fas fa-vote-yea icon"></i>Voter Status:</span>
+            <span class="info-value">{{ user.voter_status }}</span>
+        </div>
+        
         
         <a href="{{ url_for('views.account_edit') }}" class="btn btn-primary">
             <i class="fas fa-edit"></i> Edit Account

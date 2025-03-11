@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     birth_place = db.Column(db.String(255), nullable=True)
     position = db.Column(db.String(50), nullable=True)  # For officials
     is_verified = db.Column(db.Boolean, default=False)  # Admin approval required
+    voter_status = db.Column(db.String(50), default="Pending") #Voter Eligibility Status
 
     def __repr__(self):
         return f'<User {self.email}>'

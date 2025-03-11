@@ -45,7 +45,7 @@ def create_app():
 
         if not existing_user:
             hashed_password = generate_password_hash("adminpass", method="scrypt")
-            admin_user = User(firstName="Admin", lastName="User", email=admin_email, password=hashed_password, is_admin=True, is_verified=True)
+            admin_user = User(firstName="Admin", lastName="User", email=admin_email, password=hashed_password, is_admin=True, is_verified=True, voter_status="Undefined")
             db.session.add(admin_user)
             db.session.commit()
             print("Admin user created with hashed password!")
