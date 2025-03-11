@@ -175,16 +175,6 @@ def add_announcement():
         new_announcement = Announcement(title=title, content=content, user_id=current_user.id)
         db.session.add(new_announcement)
         db.session.commit()
-<<<<<<< HEAD
-
-        # ✅ Log action with a clickable link
-        announcement_link = url_for('views.view_announcement', announcement_id=new_announcement.id, _external=True)
-        log_action(current_user.email, f"Posted a new announcement: {title}", announcement_link)
-
-        flash('Announcement posted successfully!', 'success')
-
-    return redirect(url_for('views.announcements'))
-=======
 
         # ✅ Log action with a clickable link
         announcement_link = url_for('views.view_announcement', announcement_id=new_announcement.id, _external=True)
@@ -194,7 +184,6 @@ def add_announcement():
 
     return redirect(url_for('views.announcements'))
 
->>>>>>> cf916e6db0ff688ff34ae52318faf050c0553571
 
 
 @views.route('/FAQ')
