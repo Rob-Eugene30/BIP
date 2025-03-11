@@ -3,15 +3,263 @@
 {% block title %}Sign Up Selection{% endblock %}
 
 {% block content %}
-    <h1>Choose Your Sign-Up Type</h1>
-    <p>Select whether you want to sign up as a Constituent or an Official.</p>
+    <style>
+        /* Add full-screen background with dimming */
+        .signup-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i0.wp.com/touristspotsfinder.com/wp-content/uploads/2015/01/Taal-Volcano-Cavite.jpg?resize=750%2C500&ssl=1');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.5); /* Dims the background */
+            z-index: -1;
+        }
+        
+        /* Center the container vertically and horizontally */
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container-signup {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 600px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            background: white;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 10px;
+            font-size: 32px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 18px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .signup-options {
+            display: flex;
+            height: 450px; /* Adjusted to fit better */
+            position: relative;
+            text-align: center;  /* Ensures text stays centered */
+        }
+        
+        .option {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.8s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .option:hover {
+            flex: 1.5;
+        }
+        
+        .option:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            transition: all 0.8s ease;
+        }
+        
+        .constituent:before {
+            background-image: url('{{ url_for("static", filename="images/constituent-bg.jpg") }}');
+        }
+        
+        .official:before {
+            background-image: url('{{ url_for("static", filename="images/official-bg.jpg") }}');
+        }
+        
+        .option:hover:before {
+            opacity: 0.4;
+            transform: scale(1.1);
+        }
+        
+        .option .content {
+            position: relative;
+            z-index: 1;
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px; /* Limit width for better text display */
+            transition: all 0.5s ease;
+            transform: translateY(20px);
+            opacity: 0.8;
+            /* Improved text alignment */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .option:hover .content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.5s ease;
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #4a89dc, #5691f0);
+            color: white !important;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #3a7bd5, #3a6073);
+            color: white !important;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+        }
+        
+        .option:first-child {
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .option-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .option p {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #5d6778;
+            margin-bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 16px;
+            color: white;
+            position: relative;
+            z-index: 10;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .login-link a {
+            color: #8cccff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: #b3ddff;
+            text-decoration: underline;
+        }
+        
+        .option:hover {
+            box-shadow: 0 0 15px rgba(74, 137, 220, 0.5);
+        }
+        
+        .constituent {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 100%);
+        }
+        
+        .official {
+            background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+        }
+    </style>
 
-    <div class="text-center">
-        <a href="{{ url_for('auth.sign_up_constituent') }}" class="btn btn-primary btn-lg">Sign Up as Constituent</a>
-        <a href="{{ url_for('auth.sign_up_official') }}" class="btn btn-secondary btn-lg">Sign Up as Official</a>
+    <!-- Dim background image -->
+    <div class="signup-background"></div>
+
+    <!-- Wrapper to center the container -->
+    <div class="page-wrapper">
+        <div class="container-signup">
+            <h1>Choose Your Sign-Up Type</h1>
+            <p class="description">Select whether you want to sign up as a Constituent or an Official.</p>
+            
+            <div class="signup-options">
+                <div class="option constituent">
+                    <div class="content">
+                        <div class="option-title">Constituent</div>
+                        <p>Sign up as a constituent to connect with representatives and engage with your community.</p>
+                        <a href="{{ url_for('auth.sign_up_constituent') }}" class="btn btn-primary">Sign Up as Constituent</a>
+                    </div>
+                </div>
+                
+                <div class="option official">
+                    <div class="content">
+                        <div class="option-title">Official</div>
+                        <p>Sign up as an official to represent your constituency and communicate with your community.</p>
+                        <a href="{{ url_for('auth.sign_up_official') }}" class="btn btn-secondary">Sign Up as Official</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <p class="mt-3 text-center">
+    <p class="mt-3 text-center login-link">
         Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
     </p>
 {% endblock %}

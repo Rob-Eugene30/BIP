@@ -3,5 +3,266 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+    <style>
+        /* Main Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
 
+        /* Header Banner for Latest Announcement */
+        .announcement-banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('{{ url_for("static", filename="images/banner-bg.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .announcement-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .announcement-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .announcement-description {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 25px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #4a89dc;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #3a6eb5;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .grid-item {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .documents-image {
+            background-image: url('{{ url_for("static", filename="images/documents.jpg") }}');
+        }
+
+        .forum-image {
+            background-image: url('{{ url_for("static", filename="images/forum.jpg") }}');
+        }
+
+        .announcements-image {
+            background-image: url('{{ url_for("static", filename="images/announcements.jpg") }}');
+        }
+
+        .faq-image {
+            background-image: url('{{ url_for("static", filename="images/faq.jpg") }}');
+        }
+
+        .grid-content {
+            padding: 25px;
+        }
+
+        .grid-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .grid-description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .grid-stats {
+            display: flex;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .stat i {
+            margin-right: 5px;
+            font-size: 1rem;
+        }
+
+        .grid-button {
+            position: absolute;
+            bottom: 20px;
+            left: 25px;
+            right: 25px;
+            text-align: center;
+            display: block;
+            background: #f0f4f9;
+            color: #4a89dc;
+            padding: 10px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .grid-button:hover {
+            background: #4a89dc;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .announcement-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+
+    <!-- Latest Announcement Banner -->
+    <div class="announcement-banner">
+        <div class="announcement-content">
+            <h1 class="announcement-title">Welcome to Our Community Platform</h1>
+            <p class="announcement-description">We've just launched our new website with improved features to help you connect, collaborate, and access resources more easily.</p>
+            <a href="{{ url_for('views.announcements') }}" class="cta-button">
+                Read More <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="grid-container">
+        <!-- Documents Section -->
+        <div class="grid-item">
+            <div class="grid-image documents-image"></div>
+            <div class="grid-content">
+                <h2 class="grid-title">Documents</h2>
+                <p class="grid-description">Access important documents, templates, and resources to help you succeed.</p>
+                <div class="grid-stats">
+                    <div class="stat">
+                        <i class="far fa-file"></i>
+                        <span>124 files</span>
+                    </div>
+                    <div class="stat">
+                        <i class="far fa-clock"></i>
+                        <span>Updated 2 days ago</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('views.documents') }}" class="grid-button">View Documents</a>
+            </div>
+        </div>
+
+        <!-- Forum Section -->
+        <div class="grid-item">
+            <div class="grid-image forum-image"></div>
+            <div class="grid-content">
+                <h2 class="grid-title">Forum</h2>
+                <p class="grid-description">Join the conversation, ask questions, and connect with other members.</p>
+                <div class="grid-stats">
+                    <div class="stat">
+                        <i class="far fa-comment"></i>
+                        <span>43 active topics</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>128 members</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('views.forums') }}" class="grid-button">Enter Forum</a>
+            </div>
+        </div>
+
+        <!-- Announcements Section -->
+        <div class="grid-item">
+            <div class="grid-image announcements-image"></div>
+            <div class="grid-content">
+                <h2 class="grid-title">Announcements</h2>
+                <p class="grid-description">Stay updated with the latest news, events, and important information.</p>
+                <div class="grid-stats">
+                    <div class="stat">
+                        <i class="far fa-newspaper"></i>
+                        <span>15 recent updates</span>
+                    </div>
+                    <div class="stat">
+                        <i class="far fa-calendar"></i>
+                        <span>5 upcoming events</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('views.announcements') }}" class="grid-button">View Announcements</a>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="grid-item">
+            <div class="grid-image faq-image"></div>
+            <div class="grid-content">
+                <h2 class="grid-title">FAQ</h2>
+                <p class="grid-description">Find answers to common questions and learn how to make the most of our platform.</p>
+                <div class="grid-stats">
+                    <div class="stat">
+                        <i class="far fa-question-circle"></i>
+                        <span>75 questions</span>
+                    </div>
+                    <div class="stat">
+                        <i class="far fa-lightbulb"></i>
+                        <span>Helpful tips</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('views.FAQ') }}" class="grid-button">Explore FAQ</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
