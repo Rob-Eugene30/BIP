@@ -7,6 +7,8 @@ import json
 import io
 from datetime import datetime
 
+
+
 views = Blueprint('views', __name__)
 
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt', 'png', 'jpg', 'jpeg'}
@@ -46,8 +48,9 @@ def upload():
         new_document = Document(title=filename, filename=filename, data=file.read())
         db.session.add(new_document)
         db.session.commit()
+        
         document_link = url_for('views.documents', document_id=new_document.id, _external=True)
-        log_action(current_user.email, "Uploaded a document", document_link)
+        log_action(current_user.email, f"Uploaded a document: {file.filename}", document_link)
         flash('Document uploaded successfully!', 'success')
     else:
         flash('Invalid file format!', 'error')
@@ -59,7 +62,7 @@ def upload():
 @login_required
 def documents():
     docs = Document.query.all()
-    return render_template('documents.html', documents=docs)
+    return render_template('Documents.html', documents=docs, user=current_user)
 
 @views.route('/documents/<int:doc_id>')
 @login_required
@@ -75,12 +78,10 @@ def get_document(doc_id):
     
     return send_file(
         io.BytesIO(document.data),
-        mimetype="application/pdf",  # Change this if you store other file types
+        mimetype="application/pdf",  # Change this to store other file types
         as_attachment=False,
         download_name=document.filename
     )
-
-
 
 @views.route('/home', methods=['GET', 'POST'])
 @login_required
@@ -154,6 +155,12 @@ def announcements():
     announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
     return render_template('announcements.html', announcements=announcements, user=current_user)
 
+@views.route('/announcement/<int:announcement_id>')
+@login_required
+def view_announcement(announcement_id):
+    announcement = Announcement.query.get_or_404(announcement_id)  
+    return render_template('view_announcement.html', announcement=announcement, user=current_user)
+
 @views.route('/add_announcement', methods=['POST'])
 @login_required
 def add_announcement():
@@ -190,7 +197,7 @@ def delete_announcement(announcement_id):
         return redirect(url_for('views.announcements'))
 
     db.session.delete(announcement)
-    db.session.log_action(current_user.email, f"Deleted announcement: '{announcement.title}'")
+    log_action(current_user.email, f"Deleted announcement: '{announcement.title}'")
     db.session.commit()
     flash('Announcement deleted successfully!', 'success')
     return redirect(url_for('views.announcements'))
@@ -216,7 +223,8 @@ def add_forum_post():
     db.session.add(new_post)
     db.session.commit()
 
-    log_action(current_user.email, f"Created a new forum discussion: '{title}'")
+    forum_link = url_for('views.forum_post', post_id=new_post.id, _external=True)
+    log_action(current_user.email, f"Created a new forum discussion: '{title}'", forum_link)
     flash("Discussion posted successfully!", "success")
     return redirect(url_for('views.forums'))
 

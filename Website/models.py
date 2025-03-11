@@ -59,7 +59,7 @@ class Announcement(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())  # Timestamp
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # User who created the announcement
 
-    user = db.relationship('User', backref='announcements')  # Relationship to User
+    user = db.relationship('User', backref=db.backref('announcements', lazy=True))  # Relationship to User
 
 class ForumPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -51,7 +51,7 @@ def sign_up_constituent():
         last_name = request.form.get('lastName')
         email = request.form.get('email')
         address = request.form.get('address')
-        birth_date = request.form.get('birth_date')
+        birth_date = datetime.strptime(request.form.get('birth_date'), "%Y-%m-%d").date()  # ✅ Convert to a date object
         birth_place = request.form.get('birth_place')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
