@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up Selection{% endblock %}
+
+{% block content %}
+    <h1>Choose Your Sign-Up Type</h1>
+    <p>Select whether you want to sign up as a Constituent or an Official.</p>
+
+    <div class="text-center">
+        <a href="{{ url_for('auth.sign_up_constituent') }}" class="btn btn-primary btn-lg">Sign Up as Constituent</a>
+        <a href="{{ url_for('auth.sign_up_official') }}" class="btn btn-secondary btn-lg">Sign Up as Official</a>
+    </div>
+
+    <p class="mt-3 text-center">
+        Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+    </p>
+{% endblock %}

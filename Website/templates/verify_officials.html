@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Officials{% endblock %}
+
+{% block content %}
+    <h1>Verify Officials</h1>
+    <p>Below is a list of officials pending verification. Click 'Verify' to approve their accounts.</p>
+
+    {% if pending_officials %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Birth Date</th>
+                    <th>Birth Place</th>
+                    <th>Position</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for official in pending_officials %}
+                    <tr>
+                        <td>{{ official.firstName }}</td>
+                        <td>{{ official.email }}</td>
+                        <td>{{ official.address }}</td>
+                        <td>{{ official.birth_date }}</td>
+                        <td>{{ official.birth_place }}</td>
+                        <td>{{ official.position }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('views.verify_officials') }}">
+                                <input type="hidden" name="user_id" value="{{ official.id }}">
+                                <button type="submit" class="btn btn-success">Verify</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No pending official verifications at this time.</p>
+    {% endif %}
+
+    <a href="{{ url_for('views.admin_panel') }}" class="btn btn-secondary">Back to Admin Panel</a>
+{% endblock %}

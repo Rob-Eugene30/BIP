@@ -3,49 +3,89 @@
 {% block title %}Admin Panel{% endblock %}
 
 {% block content %}
-    <h1>Admin Panel</h1>
-
-    <h2>Upload a Document</h2>
-    <form action="{{ url_for('views.upload_document') }}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <button type="submit">Upload</button>
-    </form>
-
-    <div class="container">
-        <h1>Add Announcement</h1>
-        <form action="{{ url_for('views.add_announcement') }}" method="POST">
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-            </div>
-            <div class="form-group">
-                <label for="content">Content</label>
-                <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+<div class="container">
+    <h1 class="mb-4">Admin Panel</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Upload a Document</h2>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('views.upload') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
+                <input type="file" name="file" class="form-control me-2" required>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
     </div>
 
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Add Announcement</h2>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('views.add_announcement') }}" method="POST">
+                <div class="form-group mb-3">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="content">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 
-    <h2>Users</h2>
-    <table>
-        <tr>
-            <th>Email</th>
-            <th>Name</th>
-            <th>Is Admin?</th>
-        </tr>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.email }}</td>
-                <td>{{ user.firstName }} {{ user.lastName }}</td>
-                <td>{{ user.is_admin }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Users</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Is Admin?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                                <td>{{ user.is_admin }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-    <h2>Audit Trail</h2>
-<a href="{{ url_for('views.audit_report') }}" class="btn btn-info">View Audit Report</a>
-
-
-    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2 class="mb-0" align = "center">Audit Trail</h2>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <a href="{{ url_for('views.audit_report') }}" class="btn btn-info">View Audit Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2 class="mb-0" align = "center">Official Verifications</h2>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <a href="{{ url_for('views.verify_officials') }}" class="btn btn-warning">Verify Officials</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
