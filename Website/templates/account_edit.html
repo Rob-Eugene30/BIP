@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Account Information</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --secondary-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --success: #28a745;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(58, 12, 163, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 40px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transform: translateY(0);
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: var(--dark-gray);
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 120px;
+            height: 2px;
+            background: var(--gradient);
+            animation: widthExtend 1.5s ease-out forwards;
+        }
+
+        @keyframes widthExtend {
+            from { width: 0; }
+            to { width: 120px; }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            animation: slideUp 0.5s ease-out backwards;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--dark-gray);
+            transition: transform 0.3s;
+        }
+
+        .form-group:focus-within label {
+            transform: translateY(-3px);
+            color: var(--primary-color);
+        }
+
+        .icon {
+            margin-right: 10px;
+            color: var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .form-group:focus-within .icon {
+            transform: scale(1.2);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e1e5ea;
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(248, 249, 250, 0.7);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.2);
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-control:hover:not(:focus) {
+            border-color: #c8cfd6;
+            background-color: rgba(248, 249, 250, 1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            margin-top: 10px;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            z-index: -1;
+            border-radius: 50px;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            animation: fadeInUp 0.8s 0.5s backwards;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            margin-left: 15px;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+            animation: fadeInUp 0.8s 0.6s backwards;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-footer {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid var(--light-gray);
+            position: relative;
+        }
+
+        .form-footer::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100px;
+            height: 1px;
+            background: var(--gradient);
+            animation: widthExtend 1.5s ease-out 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Account Information</h1>
+        
+        <form method="POST" action="{{ url_for('views.account_edit') }}">
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope icon"></i>Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="address"><i class="fas fa-map-marker-alt icon"></i>Address:</label>
+                <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}" required>
+            </div>
+            
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save icon"></i>Save Changes
+                </button>
+                <a href="{{ url_for('views.account') }}" class="btn btn-secondary">
+                    <i class="fas fa-times icon"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
