@@ -1,4 +1,8 @@
-flask
+Flask
 Flask-SQLAlchemy
-flask-login
-flask-migrate
+Flask-Login
+Flask-Migrate
+Flask-Admin
+Werkzeug
+gunicorn
+python-dotenv
