@@ -109,6 +109,8 @@ def add_comment(doc_id):
     new_comment = Comment(user_id=current_user.id, document_id=doc_id, content=content)
     db.session.add(new_comment)
     db.session.commit()
+    document_link = url_for('views.view_document', doc_id=doc_id, _external=True)
+    log_action(current_user.email, f"Commented on document ID {doc_id}", document_link)
     return redirect(url_for('views.view_document', doc_id=doc_id))
 
 @views.route('/comments/<int:comment_id>/delete', methods=['POST'])
@@ -246,7 +248,8 @@ def forum_post(post_id):
             new_comment = ForumComment(content=content, user_id=current_user.id, post_id=post.id)
             db.session.add(new_comment)
             db.session.commit()
-            log_action(current_user.email, f"Commented on forum post: '{post.title}'")
+            comment_link = url_for('views.forum_post', post_id=post.id, _external=True)
+            log_action(current_user.email, f"Commented on forum post: '{post.title}'", comment_link)
             flash("Comment added!", "success")
             return redirect(url_for('views.forum_post', post_id=post.id))
 
@@ -285,3 +288,44 @@ def official_panel():
         return redirect(url_for('views.home'))
 
     return render_template("official_panel.html", user=current_user)
+
+
+@views.route('/account')
+@login_required
+def account():
+    # Calculate age based on birth_date
+    if current_user.birth_date:
+        today = datetime.today()
+        age = today.year - current_user.birth_date.year - ((today.month, today.day) < (current_user.birth_date.month, current_user.birth_date.day))
+    else:
+        age = None
+
+    return render_template("account.html", user=current_user, age=age)
+
+@views.route('/account_edit', methods=['GET', 'POST'])
+@login_required
+def account_edit():
+    if request.method == 'POST':
+        # Get the new email and address from the form
+        new_email = request.form.get('email')
+        new_address = request.form.get('address')
+
+        # Validate the new email (ensure it's unique)
+        if new_email != current_user.email:
+            existing_user = User.query.filter_by(email=new_email).first()
+            if existing_user:
+                flash('Email already in use by another account.', 'error')
+                return redirect(url_for('views.account_edit'))
+
+        # Update the user's email and address
+        current_user.email = new_email
+        current_user.address = new_address
+
+        # Commit changes to the database
+        db.session.commit()
+
+        flash('Your account information has been updated successfully!', 'success')
+        return redirect(url_for('views.account'))
+
+    # If it's a GET request, just render the edit form
+    return render_template("account_edit.html", user=current_user)

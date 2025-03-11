@@ -3,59 +3,83 @@
 {% block title %}Documents{% endblock %}
 
 {% block content %}
-<h2>Documents</h2>
+<div class="container">
+  <h2 class="mb-4">Documents</h2>
 
-<!-- Display each document -->
-{% for document in documents %}
-<div class="document">
-    <h3>{{ document.title }}</h3>
-    <p><a href="{{ url_for('views.get_document', doc_id=document.id) }}" target="_blank">View Document</a></p>
-    
-    <!-- Comment Section -->
-    <div class="comments">
+  <!-- Display each document in a card -->
+  {% for document in documents %}
+  <div class="card mb-4 document">
+    <div class="card-header">
+      <h3>{{ document.title }}</h3>
+    </div>
+    <div class="card-body">
+      <p>
+        <a href="{{ url_for('views.get_document', doc_id=document.id) }}" target="_blank" class="btn btn-primary">
+          <i class="bi bi-file-earmark"></i> View Document
+        </a>
+      </p>
+      
+      <!-- Comment Section -->
+      <div class="comments mt-4">
         <h4>Comments</h4>
         
         <!-- Display existing comments -->
-        {% for comment in document.comments %}
-            <div class="comment" id="comment-{{ comment.id }}">
-                <p><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
-                {% if current_user.id == comment.user_id %}
-                    <button onclick="deleteComment({ comment.id })">Delete</button>
-                {% endif %}
-            </div>
-        {% endfor %}
+        {% if document.comments %}
+          <div class="list-group mb-3">
+            {% for comment in document.comments %}
+              <div class="list-group-item" id="comment-{{ comment.id }}">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ comment.user.firstName }} {{ comment.user.lastName }}</strong>: {{ comment.text }}
+                  </div>
+                  {% if current_user.id == comment.user_id %}
+                    <button onclick="deleteComment({{ comment.id }})" class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted">No comments yet.</p>
+        {% endif %}
         
         <!-- Comment Form -->
         <form method="POST" action="{{ url_for('views.add_comment', doc_id=document.id) }}">
+          <div class="form-group">
             <input type="hidden" name="document_id" value="{{ document.id }}">
-            <textarea name="comment_text" required placeholder="Write a comment..."></textarea>
-            <button type="submit">Comment</button>
+            <textarea name="comment_text" class="form-control" required placeholder="Write a comment..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Comment</button>
         </form>
+      </div>
     </div>
+  </div>
+  {% endfor %}
 </div>
-<hr>
-{% endfor %}
 
 <script>
-    function deleteComment(commentId) {
-        fetch("/delete-comment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ commentId: commentId })
-        })
-        .then(response => response.json().catch(() => ({})))
-        .then(data => {
-            if (data.message === "Comment deleted") {
-                document.getElementById("comment-" + commentId).remove();
-            } else {
-                alert("Failed to delete comment!");
-            }
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("An error occurred while deleting the comment.");
-        });
+  function deleteComment(commentId) {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      fetch("/comments/" + commentId + "/delete", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          document.getElementById("comment-" + commentId).remove();
+        } else {
+          alert("Failed to delete comment!");
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("An error occurred while deleting the comment.");
+      });
     }
+  }
 </script>
-
 {% endblock %}
