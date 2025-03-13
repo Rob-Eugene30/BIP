@@ -21,7 +21,6 @@
                         <tr>
                             <td>{{ user.email }}</td>
                             <td>{{ user.firstName }} {{ user.lastName }}</td>
-            
                             <td>
                                 {% if user.voter_status == "Underage" %}
                                     <span class="text-danger fw-bold">Underage</span>
@@ -41,14 +40,11 @@
                 </tbody>
             </table>
         </div>
-
+    
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-success btn-lg">
-                 Update
-            </button>
+            <button type="submit" class="btn btn-success btn-lg">Update</button>
         </div>
     </form>
-
     <div class="text-center mt-3">
         <a href="{{ url_for('views.admin_panel') }}" class="btn btn-secondary">
              Back to Admin Panel

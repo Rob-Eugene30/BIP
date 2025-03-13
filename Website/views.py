@@ -309,7 +309,8 @@ def account_edit():
         # Get the new email and address from the form
         new_email = request.form.get('email')
         new_address = request.form.get('address')
-
+        new_Lname = request.form.get('Lname')
+        new_Fname = request.form.get('Fname')
         # Validate the new email (ensure it's unique)
         if new_email != current_user.email:
             existing_user = User.query.filter_by(email=new_email).first()
@@ -320,7 +321,8 @@ def account_edit():
         # Update the user's email and address
         current_user.email = new_email
         current_user.address = new_address
-
+        current_user.lastName = new_Lname
+        current_user.firstname = new_Fname
         # Commit changes to the database
         db.session.commit()
 
@@ -331,7 +333,7 @@ def account_edit():
     return render_template("account_edit.html", user=current_user)
 
 #Verification of voters
-@views.route('/admin/verify_voters')
+@views.route('/admin/verify_voters', methods=['GET','POST'])
 @login_required
 def verify_voters():
     """Displays the voter verification page and automatically marks underage users."""
@@ -358,23 +360,66 @@ def update_voter_status():
     if not current_user.is_admin:
         flash("Access denied!", "error")
         return redirect(url_for('views.admin_panel'))
-    
-    statuses = request.form.getlist('statuses')
-    
-    for user_id, status in request.form.get('statuses', {}).items():
+
+    # Debugging: Print the entire request.form
+    print("Request form data:", request.form)
+
+    # Manually parse the statuses data
+    statuses = {}
+    for key, value in request.form.items():
+        if key.startswith('statuses[') and key.endswith(']'):
+            # Extract the user_id from the key (e.g., 'statuses[2]' -> '2')
+            user_id = key[len('statuses['):-1]
+            statuses[user_id] = [value]  # Store the status as a list
+
+    print("Manually parsed statuses:", statuses)  # Debugging
+
+    # If statuses is empty, log and return an error
+    if not statuses:
+        print("No statuses found in the form data.")  # Debugging
+        flash("No statuses were submitted.", "error")
+        return redirect(url_for('views.verify_voters'))
+
+    # Iterate over the statuses and update each user
+    for user_id, status_list in statuses.items():
+        print(f"Processing user_id: {user_id}, status_list: {status_list}")  # Debugging
+
+        # Ensure the status_list is not empty
+        if not status_list:
+            print(f"Skipping user_id {user_id}: No status provided.")  # Debugging
+            continue
+
+        # Get the status (first element in the list)
+        status = status_list[0]
+        print(f"Status for user_id {user_id}: {status}")  # Debugging
+
+        # Fetch the user from the database
         user = User.query.get(user_id)
-        if user:
-            today = datetime.today()
-            age = today.year - user.birth_date.year - ((today.month, today.day) < (user.birth_date.month, user.birth_date.day))
+        if not user:
+            print(f"User not found for user_id: {user_id}")  # Debugging
+            continue  # Skip invalid users
 
-            # Prevent changing status of underage users
-            if age <= 14 and status != "Underage":
-                flash(f"{user.firstName} is underage and cannot be verified as a voter.", "error")
-                continue  # Skip this user
+        # Debugging: Print user details
+        print(f"User found: {user.email}, Current voter_status: {user.voter_status}")  # Debugging
 
-            user.voter_status = status
-            db.session.commit()
-            log_action(current_user.email, f"Updated voter status of {user.email} to {status}")
+        # Calculate the user's age
+        today = datetime.today()
+        age = today.year - user.birth_date.year - ((today.month, today.day) < (user.birth_date.month, user.birth_date.day))
+        print(f"User age: {age}")  # Debugging
+
+        # Prevent changing status of underage users
+        if age <= 14 and status != "Underage":
+            print(f"Skipping underage user: {user.firstName}")  # Debugging
+            flash(f"{user.firstName} is underage and cannot be verified as a voter.", "error")
+            continue  # Skip this user
+
+        # Update the voter status
+        user.voter_status = status
+        db.session.commit()
+        print(f"Updated {user.email} to {status}")  # Debugging
+
+        # Log the action in the audit trail
+        log_action(current_user.email, f"Updated voter status of {user.email} to {status}")
 
     flash("Voter statuses updated successfully!", "success")
     return redirect(url_for('views.verify_voters'))

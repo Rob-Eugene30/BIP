@@ -258,6 +258,16 @@
         .btn-secondary .fa-times {
             color: var(--white);
         }
+
+        /* New CSS for side-by-side alignment */
+        .name-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .name-container .form-group {
+            flex: 1;
+        }
     </style>
 </head>
 
@@ -265,6 +275,18 @@
         <h1>Edit Account Information</h1>
         
         <form method="POST" action="{{ url_for('views.account_edit') }}">
+            
+            <div class="name-container">
+                <div class="form-group">
+                    <label for="firstName"><i class="fas fa-person icon"></i>First name:</label>
+                    <input type="text" class="form-control" id="Fname" name="Fname" value="{{ user.firstName }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName"><i class="fas fa-person icon"></i>Last name:</label>
+                    <input type="text" class="form-control" id="Lname" name="Lname" value="{{ user.lastName }}" required>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="email"><i class="fas fa-envelope icon"></i>Email:</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
