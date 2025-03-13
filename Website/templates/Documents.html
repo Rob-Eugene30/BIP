@@ -30,7 +30,7 @@
               <div class="list-group-item" id="comment-{{ comment.id }}">
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <strong>{{ comment.user.firstName }} {{ comment.user.lastName }}</strong>: {{ comment.text }}
+                    <strong>{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.created_at.strftime('%Y-%m-%d %H:%M') }})</strong>: {{ comment.text }}
                   </div>
                   {% if current_user.id == comment.user_id %}
                     <button onclick="deleteComment({{ comment.id }})" class="btn btn-sm btn-danger">
