@@ -12,19 +12,19 @@
         <div class="card-header">
             <h2 class="mb-0">Upload a Document</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
             <form action="{{ url_for('views.upload') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
                 <input type="file" name="file" class="form-control me-2" required>
                 <button type="submit" class="btn btn-primary">Upload</button>
             </form>
         </div>
     </div>
-
+    
     <div class="card mb-4">
         <div class="card-header">
             <h2 class="mb-0">Add Announcement</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
             <form action="{{ url_for('views.add_announcement') }}" method="POST">
                 <div class="form-group mb-3">
                     <label for="title">Title</label>
@@ -38,12 +38,12 @@
             </form>
         </div>
     </div>
-
+    
     <div class="card mb-4">
         <div class="card-header">
             <h2 class="mb-0">Add FAQ</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
             <form action="{{ url_for('views.add_faq') }}" method="POST">
                 <div class="form-group mb-3">
                     <label for="title">Title</label>
@@ -57,12 +57,12 @@
             </form>
         </div>
     </div>
-
+    
     <div class="card mb-4">
         <div class="card-header">
             <h2 class="mb-0">Users</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -85,14 +85,14 @@
             </div>
         </div>
     </div>
-
+    
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-header">
-                    <h2 class="mb-0" align = "center">Audit Trail</h2>
+                    <h2 class="mb-0" align="center">Audit Trail</h2>
                 </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
+                <div class="card-body d-flex align-items-center justify-content-center" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
                     <a href="{{ url_for('views.audit_report') }}" class="btn btn-info">View Audit Report</a>
                 </div>
             </div>
@@ -100,9 +100,9 @@
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-header">
-                    <h2 class="mb-0" align = "center">Official Verifications</h2>
+                    <h2 class="mb-0" align="center">Official Verifications</h2>
                 </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
+                <div class="card-body d-flex align-items-center justify-content-center" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
                     <a href="{{ url_for('views.verify_officials') }}" class="btn btn-warning">Verify Officials</a>
                 </div>
             </div>
@@ -110,10 +110,10 @@
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-header">
-                    <h2 class="mb-0" align = "center">Voter Verifications</h2>
+                    <h2 class="mb-0" align="center">Voter Verifications</h2>
                 </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                    <a href="{{ url_for('views.verify_voters') }}" class="btn btn-warning">Verify Officials</a>
+                <div class="card-body d-flex align-items-center justify-content-center" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <a href="{{ url_for('views.verify_voters') }}" class="btn btn-warning">Verify Voters</a>
                 </div>
             </div>
         </div>

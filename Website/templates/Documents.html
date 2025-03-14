@@ -14,7 +14,7 @@
     <div class="card-header">
       <h3>{{ document.title }}</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
       <p>
         <a href="{{ url_for('views.get_document', doc_id=document.id) }}" target="_blank" class="btn btn-primary">
           <i class="bi bi-file-earmark"></i> View Document
