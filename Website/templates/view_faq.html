@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ faq.title }}</h1>
+        <p><strong>Posted by:</strong> {{ faq.user.email }}</p>
+        <p>{{ faq.content }}</p>
+        <a href="{{ url_for('views.faqs') }}" class="btn btn-primary">Back to FAQs</a>
+    </div>
+{% endblock %}

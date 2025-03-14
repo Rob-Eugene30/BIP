@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}FAQs{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br/>
+    <br/>
+    <h1>FAQs</h1>
+    <br/>
+    {% if faqs %}
+        {% for faq in faqs %}
+            <div class="card mb-3">
+                <div class="card-body" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 10px;">
+                    <h5 class="card-title">{{ faq.title }}</h5>
+                    <p class="card-text">{{ faq.content }}</p>
+                    <p class="text-muted">Posted by {{ faq.user.email }} on {{ faq.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    {% if current_user.id == faq.user_id or current_user.is_admin %}
+                        <form action="{{ url_for('views.delete_faq', faq_id=faq.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No FAQs yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

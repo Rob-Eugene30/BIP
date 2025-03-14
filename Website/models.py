@@ -79,3 +79,12 @@ class ForumComment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
 
     user = db.relationship('User', backref='forum_comments')
+
+class FAQ(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)  # Title of the FAQ
+    content = db.Column(db.Text, nullable=False)  # Content of the FAQ
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())  # Timestamp
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # User who created the FAQ
+
+    user = db.relationship('User', backref=db.backref('faqs', lazy=True))  # Relationship to User

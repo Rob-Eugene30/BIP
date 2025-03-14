@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for, redirect, send_file, current_app, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-from .models import Note, User, Document, Comment, AuditTrail, Announcement, ForumPost, ForumComment
+from .models import Note, User, Document, Comment, AuditTrail, Announcement, ForumPost, ForumComment, FAQ
 from . import db
 import json
 import io
@@ -187,11 +187,56 @@ def add_announcement():
     return redirect(url_for('views.announcements'))
 
 
-
-@views.route('/FAQ')
+# FAQ Routes
+@views.route('/faqs')
 @login_required
-def FAQ():
-    return render_template("FAQ.html", user=current_user)
+def faqs():
+    faqs = FAQ.query.order_by(FAQ.created_at.desc()).all()
+    return render_template('faqs.html', faqs=faqs, user=current_user)
+
+@views.route('/faq/<int:faq_id>')
+@login_required
+def view_faq(faq_id):
+    faq = FAQ.query.get_or_404(faq_id)
+    return render_template('view_faq.html', faq=faq, user=current_user)
+
+@views.route('/add_faq', methods=['POST'])
+@login_required
+def add_faq():
+    if not current_user.is_verified or (current_user.position is None and not current_user.is_admin):
+        flash("Access denied!", "error")
+        return redirect(url_for('views.home'))
+
+    title = request.form.get('title')
+    content = request.form.get('content')
+
+    if title and content:
+        new_faq = FAQ(title=title, content=content, user_id=current_user.id)
+        db.session.add(new_faq)
+        db.session.commit()
+
+        # Log action with a clickable link
+        faq_link = url_for('views.view_faq', faq_id=new_faq.id, _external=True)
+        log_action(current_user.email, f"Posted a new FAQ: {title}", faq_link)
+
+        flash('FAQ posted successfully!', 'success')
+
+    return redirect(url_for('views.faqs'))
+
+@views.route('/delete_faq/<int:faq_id>', methods=['POST'])
+@login_required
+def delete_faq(faq_id):
+    faq = FAQ.query.get_or_404(faq_id)
+
+    if faq.user_id != current_user.id and not current_user.is_admin:
+        flash("You can only delete your own FAQs!", "error")
+        return redirect(url_for('views.faqs'))
+
+    db.session.delete(faq)
+    log_action(current_user.email, f"Deleted FAQ: '{faq.title}'")
+    db.session.commit()
+    flash('FAQ deleted successfully!', 'success')
+    return redirect(url_for('views.faqs'))
 
 @views.route('/delete_announcement/<int:announcement_id>', methods=['POST'])
 @login_required
