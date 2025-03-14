@@ -38,7 +38,10 @@
                     <a href="{{ url_for('views.forum_post', post_id=post.id) }}">{{ post.title }}</a>
                 </h5>
                 <p class="card-text">{{ post.content[:200] }}...</p>
-                <p class="text-muted">Posted by {{ post.user.firstName }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p class="text-muted" style="display: flex; justify-content: space-between;">
+                    <span>Posted by {{ post.user.firstName }} {{ post.user.lastName }}</span>
+                    <span>{{ post.created_at.strftime('%Y-%m-%d at %I:%M %p') }}</span>
+                </p>
             </div>
         </div>
         {% else %}
