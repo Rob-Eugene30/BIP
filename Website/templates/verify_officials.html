@@ -9,7 +9,7 @@
     <p>Below is a list of officials pending verification. Click 'Verify' to approve their accounts.</p>
 
     {% if pending_officials %}
-        <table class="table">
+        <table class="table table-bordered table-hover align-middle custom-table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -40,9 +40,17 @@
                 {% endfor %}
             </tbody>
         </table>
+        
     {% else %}
         <p>No pending official verifications at this time.</p>
     {% endif %}
 
+    <style>
+        .custom-table {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden; /* Ensures the corners of child elements (like <th> and <td>) are also rounded */
+        }
+    </style>
     <a href="{{ url_for('views.admin_panel') }}" class="btn btn-secondary">Back to Admin Panel</a>
 {% endblock %}
