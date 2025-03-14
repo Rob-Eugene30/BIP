@@ -10,7 +10,7 @@
 
     <form id="voterForm" action="{{ url_for('views.update_voter_status') }}" method="POST">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle">
+            <table class="table table-bordered table-hover align-middle custom-table">
                 <thead class="table-dark">
                     <tr>
                         <th>Email</th>
@@ -54,4 +54,11 @@
     </div>
 </div>
 
+<style>
+    .custom-table {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden; /* Ensures the corners of child elements (like <th> and <td>) are also rounded */
+    }
+</style>
 {% endblock %}
