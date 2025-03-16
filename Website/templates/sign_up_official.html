@@ -25,10 +25,10 @@
             
             <!-- Right Side: Sign-up Form -->
             <div class="col-md-6">
-                <div class="card p-4 shadow-lg">
+                <div class="card p-4 shadow-lg" style="border-radius: 20px;">
                     <h3 class="text-center text-dark">Official Sign-Up</h3>
                     <form method="POST">
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-3"> 
                             <label for="email" class="text-dark">Email Address</label>
                             <input type="email" class="form-control" name="email" placeholder="Enter email" required />
                         </div>
@@ -39,14 +39,6 @@
                         <div class="form-group mb-3">
                             <label class="text-dark">Last Name</label>
                             <input type="text" class="form-control" name="lastName" placeholder="Enter last name" required />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="password1" class="text-dark">Password</label>
-                            <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" required />
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="password2" class="text-dark">Confirm Password</label>
-                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required />
                         </div>
                         <div class="form-group mb-3">
                             <label class="text-dark">Address</label>
@@ -69,6 +61,14 @@
                                 <option value="SK Official">SK Official</option>
                                 <option value="SK Staff">SK Staff</option>
                             </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="password1" class="text-dark">Password</label>
+                            <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" required />
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="password2" class="text-dark">Confirm Password</label>
+                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required />
                         </div>
                         <button type="submit" class="btn w-100" style="background-color: #0F62FE; color: white;">Sign Up</button>
                     </form>
